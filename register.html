@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>注册</title>
+</head>
+<style>
+    .interface {
+        margin: 10px;
+        padding: 10px;
+        text-align: center;
+    }
+</style>
+
+<body>
+    <div class="interface">
+        <a href="login.html"><span>登录</span></a>
+        <a href="register.html"><span>注册</span></a>
+    </div>
+    <form method="post" onsubmit="return false" id="form">
+        <div class="interface"><input type="text" name="username" placeholder="用户名" required></div>
+        <div class="interface"><input type="password" name="password" placeholder="密码" required></div>
+        <div class="interface"><input type="password" name="rePassword" placeholder="再次输入密码" required></div>
+        <div class="interface"><input type="submit" onclick="register_user()" value="注册"></div>
+    </form>
+    <script>
+        var localDB = openDatabase('localDB', '1.0', 'Test DB', 2 * 1024 * 1024);
+        localDB.transaction(function (ts) {
+            ts.executeSql('CREATE TABLE IF NOT EXISTS user(username,password)')
+        });
+        function register_user() {
+            var username = document.getElementsByTagName("input")[0].value;
+            var password = document.getElementsByTagName("input")[1].value;
+            var rePassword = document.getElementsByTagName("input")[2].value;
+            if (password != rePassword) {
+                alert("两次输入的密码不同，请重新输入");
+            } else {
+                localDB.transaction(function (ts) {
+                    ts.executeSql("INSERT INTO user (username,password) VALUES ('" + username + "','" + password + "');");
+                    alert("注册成功");
+                });
+            }
+        }
+    </script>
+    <footer style="text-align: center ;font-size:10px">
+        <span>Acm成员数据汇总分析平台</span>
+    </footer>
+</body>
+
+</html>
